@@ -24,6 +24,9 @@ namespace Meta.PerformanceSettings
         public RectTransform SetCPUPerfButtonsParent;
         public RectTransform SetGPUPerfButtonsParent;
 
+        public List<GameObject> ToShowIfPassthrough;
+        public OVRManager OVRManager;
+
         public GameObject GPUPushObjectPrefab;
         public BoxCollider[] GPUPushObjectSpawnLocs;
         public Transform GPUPushObjectsParent;
@@ -186,6 +189,13 @@ namespace Meta.PerformanceSettings
         {
             OVRPlugin.suggestedGpuPerfLevel = perfLevel;
             _ = StartCoroutine(WaitAndRecalculate());
+        }
+
+        public void SetPassthroughEnabled(bool passthroughEnabled)
+        {
+            OVRManager.isInsightPassthroughEnabled = passthroughEnabled;
+            foreach (var gameObject in ToShowIfPassthrough)
+                gameObject.SetActive(passthroughEnabled);
         }
 
         public void SetDynamicResolutionEnabled(bool dynResEnabled)
