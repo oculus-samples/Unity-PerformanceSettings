@@ -21,6 +21,7 @@ namespace Meta.PerformanceSettings
 
         public RectTransform SetFramerateCapParent;
         public RectTransform SetFFRParent;
+        public RectTransform SetMSAAParent;
         public RectTransform SetCPUPerfButtonsParent;
         public RectTransform SetGPUPerfButtonsParent;
 
@@ -64,6 +65,9 @@ namespace Meta.PerformanceSettings
             for (var i = SetFFRParent.childCount - 1; i >= 0; --i)
                 Destroy(SetFFRParent.GetChild(i).gameObject);
 
+            for (var i = SetMSAAParent.childCount - 1; i >= 0; --i)
+                Destroy(SetMSAAParent.GetChild(i).gameObject);
+
             for (var i = SetCPUPerfButtonsParent.childCount - 1; i >= 0; --i)
                 Destroy(SetCPUPerfButtonsParent.GetChild(i).gameObject);
 
@@ -87,6 +91,15 @@ namespace Meta.PerformanceSettings
                 ffrButton.GetComponentInChildren<TMPro.TMP_Text>().text = ffrLevel.ToString();
                 ffrButton.SetIsOnWithoutNotify(OVRPlugin.foveatedRenderingLevel == ffrLevel);
                 ffrButton.onValueChanged.AddListener((bool b) => { if (b) SetFFRLevel(ffrLevel); });
+            }
+
+            var renderPipelineAsset = GetRenderPipelineAsset();
+            foreach (UnityEngine.Rendering.Universal.MsaaQuality msaaQuality in System.Enum.GetValues(typeof(UnityEngine.Rendering.Universal.MsaaQuality)))
+            {
+                var msaaButton = Instantiate(TogglePrefab, SetMSAAParent);
+                msaaButton.GetComponentInChildren<TMPro.TMP_Text>().text = ((int)msaaQuality).ToString() + 'x';
+                msaaButton.SetIsOnWithoutNotify(renderPipelineAsset.msaaSampleCount == (int)msaaQuality);
+                msaaButton.onValueChanged.AddListener((bool b) => { if (b) SetMSAAQuality(msaaQuality); });
             }
 
             var dynResEnabled = OVRManager.instance.enableDynamicResolution;
@@ -211,6 +224,12 @@ namespace Meta.PerformanceSettings
             _ = StartCoroutine(WaitAndRecalculate());
         }
 
+        public void SetMSAAQuality(UnityEngine.Rendering.Universal.MsaaQuality quality)
+        {
+            GetRenderPipelineAsset().msaaSampleCount = (int)quality;
+            _ = StartCoroutine(WaitAndRecalculate());
+        }
+
         public void SetRenderScale(float renderScale)
         {
             Debug.Assert(OVRManager.instance.enableDynamicResolution == false);
@@ -238,7 +257,7 @@ namespace Meta.PerformanceSettings
             {
                 Debug.Log("Setting eye texture resolution from " + UnityEngine.XR.XRSettings.eyeTextureResolutionScale + " to " + renderScale);
                 UnityEngine.XR.XRSettings.eyeTextureResolutionScale = renderScale;
-                (GraphicsSettings.currentRenderPipeline as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset).renderScale = renderScale;
+                GetRenderPipelineAsset().renderScale = renderScale;
             }
         }
 
@@ -246,6 +265,11 @@ namespace Meta.PerformanceSettings
         {
             yield return new WaitForSeconds(0.1f);
             Recalculate();
+        }
+
+        private UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset GetRenderPipelineAsset()
+        {
+            return GraphicsSettings.currentRenderPipeline as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset;
         }
     }
 }

@@ -76,6 +76,13 @@ namespace Meta.PerformanceSettings
                 Selection.activeGameObject = FindObjectOfType<OVRManager>().gameObject;
             }
             EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.Space(20);
+
+            EditorGUILayout.LabelField("Additional Notes", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("The menus in this sample are rendered into separate compositor layers, and therefore are not affected by many render settings. This is a best practice for UI. "
+                + "To see the effect of render settings on perceived quality, spawn objects via the 'gpu utilization' slider.", EditorStyles.wordWrappedLabel);
+
         }
 
         private void LoadManifest()
