@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEngine;
 
 //If this is a build, displays the date/time and version info of the build.
-//Thanks to https://answers.unity.com/questions/8449/how-can-a-game-automatically-display-the-datetime.html 
+//Thanks to https://answers.unity.com/questions/8449/how-can-a-game-automatically-display-the-datetime.html
 
 [assembly: AssemblyVersion("1.0.*")]
 namespace Meta.PerformanceSettings

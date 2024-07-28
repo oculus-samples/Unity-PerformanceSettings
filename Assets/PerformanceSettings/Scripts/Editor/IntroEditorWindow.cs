@@ -76,7 +76,7 @@ namespace Meta.PerformanceSettings
                 Selection.activeGameObject = FindObjectOfType<OVRManager>().gameObject;
             }
             EditorGUILayout.EndHorizontal();
-            
+
             EditorGUILayout.Space(20);
 
             EditorGUILayout.LabelField("Additional Notes", EditorStyles.boldLabel);
