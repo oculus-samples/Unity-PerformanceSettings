@@ -211,6 +211,11 @@ namespace Meta.PerformanceSettings
                 gameObject.SetActive(passthroughEnabled);
         }
 
+        public void SetApplicationSpacewarpEnabled(bool appSwEnabled)
+        {
+            OVRManager.SetSpaceWarp(appSwEnabled);
+        }
+
         public void SetDynamicResolutionEnabled(bool dynResEnabled)
         {
             try
