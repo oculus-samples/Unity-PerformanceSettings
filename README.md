@@ -6,7 +6,7 @@ The Unity Performance Settings sample showcases methods that Unity developers ca
 
 It is recommended to use [OVR Metrics Tool](https://developer.oculus.com/documentation/native/android/ts-ovrmetricstool/), or the [Meta Quest Developer Hub Performance Analyzer](https://developer.oculus.com/documentation/native/android/ts-odh-logs-metrics/#use-performance-analyzer), in conjunction with this sample to measure the performance effects of these methods.
 
-The [Oculus License](./LICENSE) applies to the SDK and supporting material.
+The majority of PerformanceSettings is licensed under [MIT LICENSE](./LICENSE), however files from [Text Mesh Pro](http://www.unity3d.com/legal/licenses/Unity_Companion_License) are licensed under their respective licensing terms.
 
 ## Getting started
 
