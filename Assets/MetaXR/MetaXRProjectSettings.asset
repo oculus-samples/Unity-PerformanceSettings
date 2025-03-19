@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd7bb81df5b74b34dadbf531f381a26b, type: 3}
-  m_Name: OVRPlatformToolSettings
+  m_Script: {fileID: 11500000, guid: 0bfde92e0a2190c4ca32f6fb0a0c73ce, type: 3}
+  m_Name: MetaXRProjectSettings
   m_EditorClassIdentifier: 
-  riftRedistPackages: []
-  languagePackDirectory: 
-  assetConfigs:
-  - configList: []
-  - configList: []
-  - configList: []
-  targetPlatform: 3
-  runOvrLint: 1
+  boolProperties:
+    keys:
+    - Meta.XR.SDK.UsageSettings.UsesProjectSetupTool
+    values: 01
+  intProperties:
+    keys: []
+    values: 
