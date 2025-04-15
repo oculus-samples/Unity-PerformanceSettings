@@ -4,7 +4,7 @@
 
 The Unity Performance Settings sample showcases methods that Unity developers can use to improve performance in their applications.
 
-It is recommended to use [OVR Metrics Tool](https://developers.meta.com/horizon/documentation/native/android/ts-ovrmetricstool/), or the [Meta Quest Developer Hub Performance Analyzer](https://developer.meta.com/horizon/documentation/native/android/ts-odh-logs-metrics/#use-performance-analyzer), in conjunction with this sample to measure the performance effects of these methods.
+It is recommended to use [OVR Metrics Tool](https://developers.meta.com/horizon/documentation/native/android/ts-ovrmetricstool/), or the [Meta Quest Developer Hub Performance Analyzer](https://developer.meta.com/horizon/documentation/native/android/ts-mqdh-logs-metrics/#use-performance-analyzer), in conjunction with this sample to measure the performance effects of these methods.
 
 The majority of PerformanceSettings is licensed under [MIT LICENSE](./LICENSE), however files from [Text Mesh Pro](http://www.unity3d.com/legal/licenses/Unity_Companion_License) are licensed under their respective licensing terms.
 
