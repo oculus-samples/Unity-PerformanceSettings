@@ -24,7 +24,7 @@ All of the actual project files are in Assets/PerformanceSettings. This folder i
 
 This project uses the [Meta XR Platform SDK](https://assetstore.unity.com/packages/tools/integration/meta-xr-platform-sdk-262366), [Meta XR Interaction SDK](https://assetstore.unity.com/packages/tools/integration/meta-xr-interaction-sdk-264559), and [Meta XR Interaction SDK OVR Integration](https://assetstore.unity.com/packages/tools/integration/meta-xr-interaction-sdk-ovr-integration-265014). These are all free packages on the Unity Asset Store. In order to load this sample, you will need to be logged in to a Unity account with licenses for these packages.
 
-To run the sample, open the project folder in *Unity 2021.3.26f1* or newer and load the [Assets/PerformanceSettings/Scenes/MainScene](Assets/PerformanceSettings/Scenes/MainScene.unity) scene.
+To run the sample, open the project folder in *Unity 2022.3.52f1* or newer and load the [Assets/PerformanceSettings/Scenes/MainScene](Assets/PerformanceSettings/Scenes/MainScene.unity) scene.
 
 ## Controls
 
