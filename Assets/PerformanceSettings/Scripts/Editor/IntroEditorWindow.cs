@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Meta.PerformanceSettings
 {
+    [InitializeOnLoad]
     public class IntroEditorWindow : EditorWindow
     {
         private XmlDocument m_manifestDoc;
@@ -16,11 +17,26 @@ namespace Meta.PerformanceSettings
         private static string s_manifestDualCoreModeFlag = "com.oculus.dualcorecpuset";
         private static string s_manifesTradeCpuForGpuFlag = "com.oculus.trade_cpu_for_gpu_amount";
 
-        [MenuItem("Meta Samples/Intro Window")]
+        private static string s_hasWindowDisplayedSessionBool = "com.samples.performancesettings.has_window_displayed";
+
+        // This is called after inspectors update, a good time to display windows. Note: is per-frame, not just on startup.
+        static IntroEditorWindow() => EditorApplication.delayCall += ShowOnStartup;
+
+        private static void ShowOnStartup()
+        {
+            var isAlreadyDisplayed = SessionState.GetBool(s_hasWindowDisplayedSessionBool, false);
+            if (!isAlreadyDisplayed)
+            {
+                ShowWindow();
+                SessionState.SetBool(s_hasWindowDisplayedSessionBool, true);
+            }
+        }
+
+        [MenuItem("Meta/Unity Performance Settings Sample Intro Window")]
         public static void ShowWindow()
         {
             var inspectorType = Type.GetType("UnityEditor.InspectorWindow, UnityEditor.CoreModule");
-            _ = GetWindow<IntroEditorWindow>("Meta/Unity Performance", false, inspectorType);
+            _ = GetWindow<IntroEditorWindow>("Meta/Unity Performance Settings Sample", false, inspectorType);
         }
 
         private void OnEnable()
@@ -152,12 +168,5 @@ namespace Meta.PerformanceSettings
             }
             catch (Exception) { }
         }
-    }
-
-    //this causes the editor window to appear on editor launch
-    [InitializeOnLoad]
-    public class IntroEditorWindowLoader
-    {
-        static IntroEditorWindowLoader() => IntroEditorWindow.ShowWindow();
     }
 }
