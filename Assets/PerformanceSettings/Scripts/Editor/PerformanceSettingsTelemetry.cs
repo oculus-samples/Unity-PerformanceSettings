@@ -19,7 +19,7 @@ namespace Meta.PerformanceSettings
 
         static PerformanceSettingsTelemetry() => Collect();
 
-        [MenuItem("Oculus/Telemetry Settings")]
+        [MenuItem("Meta/Telemetry Settings")]
         private static void TelemetrySettings()
         {
             Collect(true);

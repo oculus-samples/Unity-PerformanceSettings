@@ -12,6 +12,9 @@ namespace Meta.PerformanceSettings
         {
             EyeTexResolutionScale,
             RenderViewportScale,
+            MinDynRes,
+            MaxDynRes,
+            FinalRenderScale,
         }
 
         public ELabelValueSource Source;
@@ -34,6 +37,9 @@ namespace Meta.PerformanceSettings
             {
                 ELabelValueSource.EyeTexResolutionScale => UnityEngine.XR.XRSettings.eyeTextureResolutionScale,
                 ELabelValueSource.RenderViewportScale => UnityEngine.XR.XRSettings.renderViewportScale,
+                ELabelValueSource.MinDynRes => OVRManager.instance?.minDynamicResolutionScale ?? 0,
+                ELabelValueSource.MaxDynRes => OVRManager.instance?.maxDynamicResolutionScale ?? 0,
+                ELabelValueSource.FinalRenderScale => UnityEngine.XR.XRSettings.eyeTextureResolutionScale * UnityEngine.XR.XRSettings.renderViewportScale,
                 _ => throw new System.Exception(),
             };
             var text = GetComponent<TMPro.TMP_Text>();

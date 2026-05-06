@@ -24,11 +24,8 @@ namespace Meta.PerformanceSettings
                 var flag = pluginClass.GetStatic<int>("GET_META_DATA");
                 var pm = currentActivity.Call<AndroidJavaObject>("getPackageManager");
                 var appInfo = pm.Call<AndroidJavaObject>("getApplicationInfo", Application.identifier, flag);
-                Debug.Log("key " + Key + " appInfo " + appInfo.ToString());
                 var metadata = appInfo.Get<AndroidJavaObject>("metaData");
-                Debug.Log("key " + Key + " metadata " + metadata.ToString());
                 var stringVal = metadata.Call<AndroidJavaObject>("get", new object[] { key });
-                Debug.Log("key " + Key + " stringVal " + (stringVal != null ? stringVal.ToString() : "NULL"));
                 var retVal = stringVal.Call<string>("toString");
                 return retVal;
             }

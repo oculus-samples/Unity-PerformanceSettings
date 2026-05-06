@@ -25,9 +25,6 @@ namespace Meta.PerformanceSettings
         public RectTransform SetCPUPerfButtonsParent;
         public RectTransform SetGPUPerfButtonsParent;
 
-        public List<GameObject> ToShowIfPassthrough;
-        public OVRManager OVRManager;
-
         public GameObject GPUPushObjectPrefab;
         public BoxCollider[] GPUPushObjectSpawnLocs;
         public Transform GPUPushObjectsParent;
@@ -38,14 +35,14 @@ namespace Meta.PerformanceSettings
         private bool m_shouldMultithreadPushCpu = false;
         public bool ShouldMultithreadPushCpu { get => m_shouldMultithreadPushCpu; set { if (value == m_shouldMultithreadPushCpu) return; m_shouldMultithreadPushCpu = value; } }
 
-        private float m_pushCpuMultiplier = 1;
+        private float m_pushCpuMultiplier = 0.1f;
         public float PushCpuMultiplier { get => m_pushCpuMultiplier; set { if (value == m_pushCpuMultiplier) return; m_pushCpuMultiplier = value; } }
 
         private int m_cpuPushVal = 0;
-        private bool m_shouldPushGpu = false;
+        private bool m_shouldPushGpu = true;
         public bool ShouldPushGpu { get => m_shouldPushGpu; set { if (value == m_shouldPushGpu) return; m_shouldPushGpu = value; } }
 
-        private float m_pushGpuMultiplier = 0;
+        private float m_pushGpuMultiplier = 100;
         public float PushGpuMultiplier { get => m_pushGpuMultiplier; set { if (value == m_pushGpuMultiplier) return; m_pushGpuMultiplier = value; } }
 
         public int CpuPushCycles_SingleThreaded => (int)(PushCpuMultiplier * 1E8);
@@ -83,14 +80,20 @@ namespace Meta.PerformanceSettings
                 refreshButton.onValueChanged.AddListener((bool b) => { if (b) SetRefreshRate(refreshRate); });
             }
 
+            var dynamicFfrButton = Instantiate(TogglePrefab, SetFFRParent);
+            dynamicFfrButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Dynamic FFR";
+            dynamicFfrButton.SetIsOnWithoutNotify(OVRPlugin.useDynamicFoveatedRendering);
+            dynamicFfrButton.onValueChanged.AddListener((bool b) => { SetDynamicFFR(b); });
+
             foreach (OVRPlugin.FoveatedRenderingLevel ffrLevel in System.Enum.GetValues(typeof(OVRPlugin.FoveatedRenderingLevel)))
             {
                 if (ffrLevel == OVRPlugin.FoveatedRenderingLevel.EnumSize) continue;
 
                 var ffrButton = Instantiate(TogglePrefab, SetFFRParent);
                 ffrButton.GetComponentInChildren<TMPro.TMP_Text>().text = ffrLevel.ToString();
-                ffrButton.SetIsOnWithoutNotify(OVRPlugin.foveatedRenderingLevel == ffrLevel);
+                ffrButton.SetIsOnWithoutNotify(!OVRPlugin.useDynamicFoveatedRendering && OVRPlugin.foveatedRenderingLevel == ffrLevel);
                 ffrButton.onValueChanged.AddListener((bool b) => { if (b) SetFFRLevel(ffrLevel); });
+                ffrButton.interactable = !OVRPlugin.useDynamicFoveatedRendering;
             }
 
             var renderPipelineAsset = GetRenderPipelineAsset();
@@ -186,9 +189,9 @@ namespace Meta.PerformanceSettings
             _ = StartCoroutine(WaitAndRecalculate());
         }
 
-        public void ToggleDynamicFFR()
+        public void SetDynamicFFR(bool isDynamicFfr)
         {
-            OVRPlugin.useDynamicFoveatedRendering = !OVRPlugin.useDynamicFoveatedRendering;
+            OVRPlugin.useDynamicFoveatedRendering = isDynamicFfr;
             _ = StartCoroutine(WaitAndRecalculate());
         }
 
@@ -206,9 +209,20 @@ namespace Meta.PerformanceSettings
 
         public void SetPassthroughEnabled(bool passthroughEnabled)
         {
-            OVRManager.isInsightPassthroughEnabled = passthroughEnabled;
-            foreach (var gameObject in ToShowIfPassthrough)
-                gameObject.SetActive(passthroughEnabled);
+            OVRManager.instance.isInsightPassthroughEnabled = passthroughEnabled;
+            var cameras = OVRManager.instance.GetComponentsInChildren<Camera>();
+            foreach (var camera in cameras)
+            {
+                if (passthroughEnabled)
+                {
+                    camera.clearFlags = CameraClearFlags.SolidColor;
+                    camera.backgroundColor = Color.clear;
+                }
+                else
+                {
+                    camera.clearFlags = CameraClearFlags.Skybox;
+                }
+            }
         }
 
         public void SetApplicationSpacewarpEnabled(bool appSwEnabled)
@@ -218,8 +232,16 @@ namespace Meta.PerformanceSettings
 
         public void SetDynamicResolutionEnabled(bool dynResEnabled)
         {
+            UnityEngine.Debug.LogWarning("SetDynamicResolutionEnabled " + dynResEnabled + ". current minDynRes "
+                + OVRManager.instance.minDynamicResolutionScale + ", max " + OVRManager.instance.maxDynamicResolutionScale);
             try
             {
+                if (dynResEnabled == false)
+                {
+                    // need to reset XRSettings.renderViewportScale when disabling dynRes
+                    UnityEngine.Debug.LogWarning("resetting dynRes");
+                    UnityEngine.XR.XRSettings.renderViewportScale = 1.0f;
+                }
                 OVRManager.instance.enableDynamicResolution = dynResEnabled;
             }
             catch (System.Exception e)
@@ -238,6 +260,11 @@ namespace Meta.PerformanceSettings
         public void SetRenderScale(float renderScale)
         {
             Debug.Assert(OVRManager.instance.enableDynamicResolution == false);
+
+            //no action if this is almost the same number
+            float currentRenderScale = UnityEngine.XR.XRSettings.renderViewportScale * UnityEngine.XR.XRSettings.eyeTextureResolutionScale;
+            if (Mathf.Abs(currentRenderScale - renderScale) < 0.001f) return;
+
             TryAndSetEyeTextureResolution(renderScale);
             UnityEngine.XR.XRSettings.renderViewportScale = renderScale / UnityEngine.XR.XRSettings.eyeTextureResolutionScale;
         }
@@ -245,15 +272,24 @@ namespace Meta.PerformanceSettings
         public void SetMinDynamicResolutionScale(float minDynRes)
         {
             Debug.Assert(OVRManager.instance.enableDynamicResolution);
-            TryAndSetEyeTextureResolution(minDynRes);
-            OVRManager.instance.minDynamicResolutionScale = minDynRes / UnityEngine.XR.XRSettings.eyeTextureResolutionScale;
+
+            //no action if this is almost the same number
+            if (Mathf.Abs(minDynRes - OVRManager.instance.minDynamicResolutionScale) < 0.001f) return;
+
+            UnityEngine.Debug.LogWarning("new minDynRes is " + minDynRes);
+            OVRManager.instance.minDynamicResolutionScale = minDynRes;
         }
 
         public void SetMaxDynamicResolutionScale(float maxDynRes)
         {
             Debug.Assert(OVRManager.instance.enableDynamicResolution);
-            TryAndSetEyeTextureResolution(maxDynRes);
-            OVRManager.instance.maxDynamicResolutionScale = maxDynRes / UnityEngine.XR.XRSettings.eyeTextureResolutionScale;
+
+
+            //no action if this is almost the same number
+            if (Mathf.Abs(maxDynRes - OVRManager.instance.maxDynamicResolutionScale) < 0.001f) return;
+
+            UnityEngine.Debug.LogWarning("new maxDynRes is " + maxDynRes);
+            OVRManager.instance.maxDynamicResolutionScale = maxDynRes;
         }
 
         private void TryAndSetEyeTextureResolution(float renderScale)

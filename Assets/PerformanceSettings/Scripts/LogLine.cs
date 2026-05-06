@@ -24,13 +24,13 @@ namespace Meta.PerformanceSettings
             if (!m_expanded)
             {
                 m_expanded = true;
-                AssocLogText.enableWordWrapping = true;
+                AssocLogText.textWrappingMode = TMPro.TextWrappingModes.Normal;
                 AssocLogText.overflowMode = TMPro.TextOverflowModes.Overflow;
             }
             else
             {
                 m_expanded = false;
-                AssocLogText.enableWordWrapping = false;
+                AssocLogText.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
                 AssocLogText.overflowMode = TMPro.TextOverflowModes.Truncate;
             }
             Recalculate();

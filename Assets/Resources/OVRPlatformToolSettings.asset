@@ -19,4 +19,4 @@ MonoBehaviour:
   - configList: []
   - configList: []
   targetPlatform: 3
-  runOvrLint: 1
+  runProjectSetupTool: 1

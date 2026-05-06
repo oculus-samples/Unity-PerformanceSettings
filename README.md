@@ -22,9 +22,14 @@ git clone https://github.com/oculus-samples/Unity-PerformanceSettings.git
 
 All of the actual project files are in Assets/PerformanceSettings. This folder includes all scripts and assets to run the sample, excluding those that are part of plugins.
 
-This project uses the [Meta XR Platform SDK](https://assetstore.unity.com/packages/tools/integration/meta-xr-platform-sdk-262366), [Meta XR Interaction SDK](https://assetstore.unity.com/packages/tools/integration/meta-xr-interaction-sdk-264559), and [Meta XR Interaction SDK OVR Integration](https://assetstore.unity.com/packages/tools/integration/meta-xr-interaction-sdk-ovr-integration-265014). These are all free packages on the Unity Asset Store. In order to load this sample, you will need to be logged in to a Unity account with licenses for these packages.
+This project depends on SDKs defined in the [Packages/manifest.json](./Packages/manifest.json):
 
-To run the sample, open the project folder in *Unity 2022.3.52f1* or newer and load the [Assets/PerformanceSettings/Scenes/MainScene](Assets/PerformanceSettings/Scenes/MainScene.unity) scene.
+* [Meta XR Core SDK](https://assetstore.unity.com/packages/tools/integration/meta-xr-core-sdk-269169)
+* [Meta XR Interaction SDK](https://assetstore.unity.com/packages/tools/integration/meta-xr-interaction-sdk-265014)
+
+All Meta SDKs can be found in the [Unity Asset Store](https://assetstore.unity.com/publishers/25353).
+
+To run the sample, open the project folder in *Unity 6000.0.59f2* or newer and load the [Assets/PerformanceSettings/Scenes/MainScene](Assets/PerformanceSettings/Scenes/MainScene.unity) scene.
 
 ## Controls
 
