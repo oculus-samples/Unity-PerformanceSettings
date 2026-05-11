@@ -80,20 +80,12 @@ namespace Meta.PerformanceSettings
                 refreshButton.onValueChanged.AddListener((bool b) => { if (b) SetRefreshRate(refreshRate); });
             }
 
-            var dynamicFfrButton = Instantiate(TogglePrefab, SetFFRParent);
-            dynamicFfrButton.GetComponentInChildren<TMPro.TMP_Text>().text = "Dynamic FFR";
-            dynamicFfrButton.SetIsOnWithoutNotify(OVRPlugin.useDynamicFoveatedRendering);
-            dynamicFfrButton.onValueChanged.AddListener((bool b) => { SetDynamicFFR(b); });
-
-            foreach (OVRPlugin.FoveatedRenderingLevel ffrLevel in System.Enum.GetValues(typeof(OVRPlugin.FoveatedRenderingLevel)))
+            foreach (OVRManager.FoveatedRenderingLevel ffrLevel in System.Enum.GetValues(typeof(OVRManager.FoveatedRenderingLevel)))
             {
-                if (ffrLevel == OVRPlugin.FoveatedRenderingLevel.EnumSize) continue;
-
                 var ffrButton = Instantiate(TogglePrefab, SetFFRParent);
                 ffrButton.GetComponentInChildren<TMPro.TMP_Text>().text = ffrLevel.ToString();
-                ffrButton.SetIsOnWithoutNotify(!OVRPlugin.useDynamicFoveatedRendering && OVRPlugin.foveatedRenderingLevel == ffrLevel);
+                ffrButton.SetIsOnWithoutNotify(OVRManager.foveatedRenderingLevel == ffrLevel);
                 ffrButton.onValueChanged.AddListener((bool b) => { if (b) SetFFRLevel(ffrLevel); });
-                ffrButton.interactable = !OVRPlugin.useDynamicFoveatedRendering;
             }
 
             var renderPipelineAsset = GetRenderPipelineAsset();
@@ -111,18 +103,16 @@ namespace Meta.PerformanceSettings
             foreach (var gameObject in ToShowIfNoDynRes)
                 gameObject.SetActive(!dynResEnabled);
 
-            foreach (OVRPlugin.ProcessorPerformanceLevel perfLevel in System.Enum.GetValues(typeof(OVRPlugin.ProcessorPerformanceLevel)))
+            foreach (OVRManager.ProcessorPerformanceLevel perfLevel in System.Enum.GetValues(typeof(OVRManager.ProcessorPerformanceLevel)))
             {
-                if (perfLevel == OVRPlugin.ProcessorPerformanceLevel.EnumSize) continue;
-
                 var gpuButton = Instantiate(TogglePrefab, SetGPUPerfButtonsParent);
                 gpuButton.GetComponentInChildren<TMPro.TMP_Text>().text = perfLevel.ToString();
-                gpuButton.SetIsOnWithoutNotify(OVRPlugin.suggestedGpuPerfLevel == perfLevel);
+                gpuButton.SetIsOnWithoutNotify(OVRManager.suggestedGpuPerfLevel == perfLevel);
                 gpuButton.onValueChanged.AddListener((bool b) => { if (b) SetGPUPerfLevel(perfLevel); });
 
                 var cpuButton = Instantiate(TogglePrefab, SetCPUPerfButtonsParent);
                 cpuButton.GetComponentInChildren<TMPro.TMP_Text>().text = perfLevel.ToString();
-                cpuButton.SetIsOnWithoutNotify(OVRPlugin.suggestedCpuPerfLevel == perfLevel);
+                cpuButton.SetIsOnWithoutNotify(OVRManager.suggestedCpuPerfLevel == perfLevel);
                 cpuButton.onValueChanged.AddListener((bool b) => { if (b) SetCPUPerfLevel(perfLevel); });
             }
         }
@@ -183,27 +173,21 @@ namespace Meta.PerformanceSettings
             _ = StartCoroutine(WaitAndRecalculate());
         }
 
-        private void SetFFRLevel(OVRPlugin.FoveatedRenderingLevel ffrLevel)
+        private void SetFFRLevel(OVRManager.FoveatedRenderingLevel ffrLevel)
         {
-            OVRPlugin.foveatedRenderingLevel = ffrLevel;
+            OVRManager.foveatedRenderingLevel = ffrLevel;
             _ = StartCoroutine(WaitAndRecalculate());
         }
 
-        public void SetDynamicFFR(bool isDynamicFfr)
+        public void SetCPUPerfLevel(OVRManager.ProcessorPerformanceLevel perfLevel)
         {
-            OVRPlugin.useDynamicFoveatedRendering = isDynamicFfr;
+            OVRManager.suggestedCpuPerfLevel = perfLevel;
             _ = StartCoroutine(WaitAndRecalculate());
         }
 
-        public void SetCPUPerfLevel(OVRPlugin.ProcessorPerformanceLevel perfLevel)
+        public void SetGPUPerfLevel(OVRManager.ProcessorPerformanceLevel perfLevel)
         {
-            OVRPlugin.suggestedCpuPerfLevel = perfLevel;
-            _ = StartCoroutine(WaitAndRecalculate());
-        }
-
-        public void SetGPUPerfLevel(OVRPlugin.ProcessorPerformanceLevel perfLevel)
-        {
-            OVRPlugin.suggestedGpuPerfLevel = perfLevel;
+            OVRManager.suggestedGpuPerfLevel = perfLevel;
             _ = StartCoroutine(WaitAndRecalculate());
         }
 
