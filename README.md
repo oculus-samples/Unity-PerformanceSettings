@@ -52,3 +52,9 @@ Additionally, at the bottom of the main screen, there is a list of __Build-Time 
  - [Dual-core mode](https://developer.meta.com/horizon/documentation/unity/po-quest-boost/#dual-core-mode) status. if enabled, you can perform more CPU utilization operations per-frame if the `use all cores?` checkbox is disabled, but fewer operations per-frame if `use all cores?` is enabled.
  - [Processor favor](https://developers.meta.com/horizon/documentation/unity/po-quest-boost/#trading-between-cpu-and-gpu-levels-meta-quest-3-only) status
  - Supported Devices, the value of [com.oculus.supportedDevices](https://developer.meta.com/horizon/blog/managing-meta-quest-1-guidance-developers/) in the AndroidManifest.xml for the application. Listing a headset type here gives it access to some of the performance controls above.
+
+## AI coding agents
+
+This repo is wired up for AI coding agents — `AGENTS.md`, `.vscode/extensions.json`, `.mcp.json`, `.cursor/rules/`, and a few client-specific dotfiles surface the **Meta Horizon** VS Code/Cursor extension, the `hzdb` MCP server, and the Meta Quest skill set automatically.
+
+Full toolchain, including Unity skills and per-client install instructions: [github.com/meta-quest/agentic-tools](https://github.com/meta-quest/agentic-tools).
