@@ -29,7 +29,7 @@ This project depends on SDKs defined in the [Packages/manifest.json](./Packages/
 
 All Meta SDKs can be found in the [Unity Asset Store](https://assetstore.unity.com/publishers/25353).
 
-To run the sample, open the project folder in *Unity 6000.0.59f2* or newer and load the [Assets/PerformanceSettings/Scenes/MainScene](Assets/PerformanceSettings/Scenes/MainScene.unity) scene.
+To run the sample, open the project folder in *Unity 6000.3.15f1* or newer and load the [Assets/PerformanceSettings/Scenes/MainScene](Assets/PerformanceSettings/Scenes/MainScene.unity) scene.
 
 ## Controls
 

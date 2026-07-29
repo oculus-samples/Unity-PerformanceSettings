@@ -89,7 +89,7 @@ namespace Meta.PerformanceSettings
             GUILayout.Label("Favor CPU/GPU");
             if (GUILayout.Button(new GUIContent("Set value in OVRManager")))
             {
-                Selection.activeGameObject = FindObjectOfType<OVRManager>().gameObject;
+                Selection.activeGameObject = FindFirstObjectByType<OVRManager>().gameObject;
             }
             EditorGUILayout.EndHorizontal();
 

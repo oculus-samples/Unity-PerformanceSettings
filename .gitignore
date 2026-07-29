@@ -59,4 +59,5 @@ sysinfo.txt
 crashlytics-build.properties
 
 UserSettings
-.vscodediff --git a/arvr/projects/sample-apps/unity-performance-settings/Assets/Resources/OVRBuildConfig.asset b/arvr/projects/sample-apps/unity-performance-settings/Assets/Resources/OVRBuildConfig.asset
+.vscode
+*.slnx
