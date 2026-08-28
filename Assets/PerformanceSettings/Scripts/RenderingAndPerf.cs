@@ -18,6 +18,7 @@ namespace Meta.PerformanceSettings
         public List<GameObject> ToShowIfDynRes;
         public List<GameObject> ToShowIfNoDynRes;
         public Slider MinDynResSlider, MaxDynResSlider;
+        public List<float> CustomFramerates;
 
         public RectTransform SetFramerateCapParent;
         public RectTransform SetFFRParent;
@@ -71,11 +72,15 @@ namespace Meta.PerformanceSettings
             for (var i = SetGPUPerfButtonsParent.childCount - 1; i >= 0; --i)
                 Destroy(SetGPUPerfButtonsParent.GetChild(i).gameObject);
 
-            var refreshRates = new List<float>(OVRManager.display.displayFrequenciesAvailable).Distinct();
+            var refreshRates = new List<float>(OVRManager.display.displayFrequenciesAvailable);
+            if (CustomFramerates != null)
+                refreshRates.AddRange(CustomFramerates);
+            refreshRates.Sort();
             foreach (var refreshRate in refreshRates)
             {
+                var isCustomRate = CustomFramerates != null && CustomFramerates.Contains(refreshRate);
                 var refreshButton = Instantiate(TogglePrefab, SetFramerateCapParent);
-                refreshButton.GetComponentInChildren<TMPro.TMP_Text>().text = refreshRate.ToString() + " Hz";
+                refreshButton.GetComponentInChildren<TMPro.TMP_Text>().text = refreshRate.ToString() + "Hz" + (isCustomRate ? " (custom)" : "");
                 refreshButton.SetIsOnWithoutNotify(OVRManager.display.displayFrequency == refreshRate);
                 refreshButton.onValueChanged.AddListener((bool b) => { if (b) SetRefreshRate(refreshRate); });
             }
